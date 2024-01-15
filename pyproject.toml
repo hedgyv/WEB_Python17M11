@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "web-python17m11"
+version = "0.1.0"
+description = ""
+authors = ["hedgyv <hedgy85@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.109.0"
+uvicorn = {extras = ["standard"], version = "^0.25.0"}
+psycopg2-binary = "^2.9.9"
+alembic = "^1.13.1"
+sqlalchemy = "^2.0.25"
+pydantic = {extras = ["email"], version = "^2.5.3"}
+asyncpg = "^0.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
