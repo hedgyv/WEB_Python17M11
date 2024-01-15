@@ -1,8 +1,12 @@
-from sqlalchemy import select
+from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.entity.models import Contact
 from src.schemas.contact import ContactSchema, ContactUpdateSchema
+
+from datetime import date
+import datetime
+
 
 
 async def get_contacts(limit: int, offset: int, db: AsyncSession):
@@ -16,6 +20,17 @@ async def get_contact(contact_id: int, db: AsyncSession):
     contact = await db.execute(stmt)
     return contact.scalar_one_or_none()
 
+async def get_contacts_by_birthday(today: date, end_date: date, db: AsyncSession):
+    try:
+        date_range_filter = and_(Contact.birthday >= today, Contact.birthday <= end_date)
+        stmt = select(Contact).filter(date_range_filter)
+        contacts = await db.execute(stmt)
+        print(contacts.all())
+        print(contacts.fetchall())
+        #return {"contacts": contacts.fetchall()}
+    except Exception as e:
+        print(f"Error: {e}")
+        return []
 
 async def create_contact(body: ContactSchema, db: AsyncSession):
     contact = Contact(**body.model_dump(exclude_unset=True))  # (title=body.title, description=body.description)

@@ -6,6 +6,7 @@ from src.repository import contacts as reps_contacts
 from src.schemas.contact import ContactSchema, ContactUpdateSchema, ContactResponse
 
 import re
+from datetime import date, timedelta
 
 router = APIRouter(prefix='/contacts', tags=['contacts'])
 
@@ -23,6 +24,18 @@ async def get_contact(contact_id: int = Path(ge=1), db: AsyncSession = Depends(g
     if contact is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT FOUND")
     return contact
+
+@router.get("/birthdays/", response_model=list[ContactResponse])
+async def get_contact_by_bday(
+    days_ahead: int = Query(7, description="Number of days ahead to search for birthdays"),
+    db: AsyncSession = Depends(get_db),
+):
+    today = date.today()
+    end_date = today + timedelta(days=days_ahead)
+    contacts = await reps_contacts.get_contacts_by_birthday(today, end_date, db)
+    if contacts is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT FOUND")
+    return {"contacts": contacts}
 
 
 @router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)

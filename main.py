@@ -7,6 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.database.db import get_db
 from src.routes import contacts
 from src.entity.models import Contact
+from src.repository import contacts as reps_contacts
+
 
 app = FastAPI()
 app.include_router(contacts.router, prefix="/api")
@@ -59,4 +61,6 @@ async def find_contact(
     contacts = result.scalars().all()
 
     return {"contacts": contacts}
+
+
 
