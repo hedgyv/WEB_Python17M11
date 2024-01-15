@@ -25,9 +25,7 @@ async def get_contacts_by_birthday(today: date, end_date: date, db: AsyncSession
         date_range_filter = and_(Contact.birthday >= today, Contact.birthday <= end_date)
         stmt = select(Contact).filter(date_range_filter)
         contacts = await db.execute(stmt)
-        print(contacts.all())
-        print(contacts.fetchall())
-        #return {"contacts": contacts.fetchall()}
+        return contacts.scalars().all()
     except Exception as e:
         print(f"Error: {e}")
         return []

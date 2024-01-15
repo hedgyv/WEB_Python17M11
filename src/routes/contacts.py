@@ -35,7 +35,7 @@ async def get_contact_by_bday(
     contacts = await reps_contacts.get_contacts_by_birthday(today, end_date, db)
     if contacts is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT FOUND")
-    return {"contacts": contacts}
+    return contacts
 
 
 @router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)
